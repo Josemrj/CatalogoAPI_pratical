@@ -21,19 +21,31 @@ app.MapGet("/categories", async (AppDbContext db) =>
 
     if (categories == null || categories.Count == 0)
         return Results.NotFound("RECURSO NAO ENCONTRADO...");
-    
+
     return Results.Ok(categories);
-    
+
 });
 
 app.MapGet("/categories/{id:int}", async (int id, AppDbContext db) =>
 {
-    var categoria = await db.Categories.FirstOrDefaultAsync(c => c.CategoryId == id);
+    var categories = await db.Categories.FirstOrDefaultAsync(c => c.CategoryId == id);
 
-    if (categoria == null)
+    if (categories == null)
         return Results.NotFound("RECURSO NAO ENCONTRADO...");
 
-    return Results.Ok(categoria);
+    return Results.Ok(categories);
+});
+
+app.MapPost("/categories", async (Category ct, AppDbContext db) =>
+{
+    var create = await db.Categories.AddAsync(ct);
+
+    if (create == null)
+        return Results.NotFound("RECURSO NAO ENCONTRADO...");
+
+    db.SaveChanges();
+
+    return Results.Created($"/categories{ct.CategoryId}:int", ct);
 });
 
 // Configure the HTTP request pipeline.
