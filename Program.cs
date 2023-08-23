@@ -15,6 +15,7 @@ builder.Services.AddDbContext<AppDbContext>(opt =>
 
 var app = builder.Build();
 
+#region Category Endpoints
 app.MapGet("/categories", async (AppDbContext db) =>
 {
     var categories = await db.Categories.ToListAsync();
@@ -79,6 +80,9 @@ app.MapDelete("/categories/{id:int}", async (int id, AppDbContext db) =>
 
     return Results.NoContent();
 });
+#endregion 
+
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
