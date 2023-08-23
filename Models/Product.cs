@@ -1,4 +1,6 @@
-﻿namespace CatalogoAPI_pratical.Models
+﻿using System.Text.Json.Serialization;
+
+namespace CatalogoAPI_pratical.Models
 {
     public class Product
     {
@@ -9,8 +11,11 @@
         public string? Image { get; set; }
         public DateTime PurchaseDate { get; set; }
         public int Stock { get; set; }
-
+        
+        [JsonIgnore]
         public int CategoryId { get; set; }
+
+        [JsonIgnore]
         public Category? Category { get; set; }
 
     }
