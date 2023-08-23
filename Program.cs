@@ -67,6 +67,19 @@ app.MapPut("/categories/{id:int}", async (int id, AppDbContext db, Category catI
     return Results.Created($"/categories/{category.CategoryId}", category);
 });
 
+app.MapDelete("/categories/{id:int}", async (int id, AppDbContext db) =>
+{
+    var category = await db.Categories.FindAsync(id);
+
+    if (category == null)
+        return Results.NotFound("RECURSO NAO ENCONTRADO");
+
+    db.Categories.Remove(category);
+    await db.SaveChangesAsync();
+
+    return Results.NoContent();
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
