@@ -48,6 +48,25 @@ app.MapPost("/categories", async (Category ct, AppDbContext db) =>
     return Results.Created($"/categories{ct.CategoryId}:int", ct);
 });
 
+app.MapPut("/categories/{id:int}", async (int id, AppDbContext db, Category catInput) =>
+{
+    var category = await db.Categories.FirstOrDefaultAsync(c => c.CategoryId == id);
+
+    if (category == null)
+        return Results.NotFound("RECURSO NAO ENCONTRADO");
+
+    category.CategoryId = catInput.CategoryId;
+    category.Name = catInput.Name;
+    category.Description = catInput.Description;
+
+    if (catInput.CategoryId != id)
+        return Results.BadRequest($"DADOS À ENVIAR NAO CORRESPONDEM COM DADOS INTERNOS \t\tID:{id}");
+
+    await db.SaveChangesAsync();
+
+    return Results.Created($"/categories/{category.CategoryId}", category);
+});
+
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
