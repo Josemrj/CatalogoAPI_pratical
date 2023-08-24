@@ -61,7 +61,7 @@ app.MapPut("/categories/{id:int}", async (int id, AppDbContext db, Category catI
     category.Description = catInput.Description;
 
     if (catInput.CategoryId != id)
-        return Results.BadRequest($"DADOS À ENVIAR NAO CORRESPONDEM COM DADOS INTERNOS \t\tID:{id}");
+        return Results.BadRequest($"DADOS ï¿½ ENVIAR NAO CORRESPONDEM COM DADOS INTERNOS \t\tID:{id}");
 
     await db.SaveChangesAsync();
 
