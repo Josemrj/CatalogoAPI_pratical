@@ -82,6 +82,47 @@ app.MapDelete("/categories/{id:int}", async (int id, AppDbContext db) =>
 });
 #endregion 
 
+app.MapGet("/products", async (AppDbContext db) => await db.Products.ToListAsync());
+
+app.MapGet("/products/{id:int}", async(int id, AppDbContext db) =>
+{
+    var product = await db.Products.FindAsync(id);
+
+    if (product == null)
+        return Results.NotFound("RECURSO NAO ENCONTRADO");
+
+    return Results.Ok(product);
+});
+
+app.MapPost("/products", async (Product prod, AppDbContext db) =>
+{
+    var product = await db.Products.AddAsync(prod);
+
+    await db.SaveChangesAsync();
+
+    return Results.Created($"/products/{prod.ProductId}", prod);
+});
+
+app.MapPut("/products/{id:int}", async(int id, Product prdInput, AppDbContext db) =>
+{
+    var products = await db.Products.FirstOrDefaultAsync(c => c.CategoryId == id);
+
+    if (products == null)
+        return Results.NotFound();
+
+    products.ProductId = prdInput.ProductId;
+    products.Name = prdInput.Name;
+    products.Description = prdInput.Description;
+    products.Price = prdInput.Price;
+    products.Image = prdInput.Image;
+    products.PurchaseDate = DateTime.Now;
+    products.Stock = prdInput.Stock;
+
+    await db.SaveChangesAsync();
+
+    return Results.Created($"products/{products.ProductId}", products);
+});
+
 
 
 // Configure the HTTP request pipeline.

@@ -12,7 +12,6 @@ namespace CatalogoAPI_pratical.Models
         public DateTime PurchaseDate { get; set; }
         public int Stock { get; set; }
         
-        [JsonIgnore]
         public int CategoryId { get; set; }
 
         [JsonIgnore]
