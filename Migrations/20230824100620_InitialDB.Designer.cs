@@ -11,7 +11,7 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace CatalogoAPI_pratical.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20230822183753_InitialDB")]
+    [Migration("20230824100620_InitialDB")]
     partial class InitialDB
     {
         /// <inheritdoc />
