@@ -82,6 +82,7 @@ app.MapDelete("/categories/{id:int}", async (int id, AppDbContext db) =>
 });
 #endregion 
 
+#region Product Endpoints
 app.MapGet("/products", async (AppDbContext db) => await db.Products.ToListAsync());
 
 app.MapGet("/products/{id:int}", async(int id, AppDbContext db) =>
@@ -98,6 +99,9 @@ app.MapPost("/products", async (Product prod, AppDbContext db) =>
 {
     var product = await db.Products.AddAsync(prod);
 
+    if(product == null) 
+        return Results.NotFound(product);
+
     await db.SaveChangesAsync();
 
     return Results.Created($"/products/{prod.ProductId}", prod);
@@ -108,7 +112,7 @@ app.MapPut("/products/{id:int}", async(int id, Product prdInput, AppDbContext db
     var products = await db.Products.FirstOrDefaultAsync(c => c.CategoryId == id);
 
     if (products == null)
-        return Results.NotFound();
+        return Results.NotFound(products);
 
     products.ProductId = prdInput.ProductId;
     products.Name = prdInput.Name;
@@ -122,6 +126,20 @@ app.MapPut("/products/{id:int}", async(int id, Product prdInput, AppDbContext db
 
     return Results.Created($"products/{products.ProductId}", products);
 });
+
+app.MapDelete("/products/{id:int}", async (int id, AppDbContext db) =>
+{
+    var productDelete = await db.Products.FirstOrDefaultAsync(c => c.CategoryId == id);
+
+    if (productDelete == null)
+        return Results.BadRequest("ESSE RECURSO NAO EXISTE");
+
+    db.Products.Remove(productDelete);
+    await db.SaveChangesAsync();
+
+    return Results.NoContent();
+});
+#endregion
 
 
 
